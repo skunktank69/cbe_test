@@ -1,24 +1,23 @@
 {
-  "repo": {
-    "name": "cbe_official",
-    "author": "team cb",
-    "description": "...",
-    "version": "0.0.1"
-  },
-  "extensions": [
-    {
-      "id": "cbe_1",
-      "name": "MangaDotNet",
-      "version": "0.0.1",
-      "type": "manga",
-      "entry": "main.js",
-      "path": "cbe_1-0.0.1.ext",
-      "author": "",
-      "description": "",
-      "lang": [
-        "en"
-      ],
-      "features": {}
-    }
-  ]
+    "repo": {
+        "name": ".",
+        "author": "skunktank69",
+        "version": "0.0.1"
+    },
+    "extensions": [
+        {
+            "id": "mangadotnet",
+            "name": "MangaDotNet",
+            "version": "0.0.1",
+            "type": "manga",
+            "author": "Skunktank69",
+            "entry": "main.js",
+            "sourceLogo": "logo.png",
+            "lang": [
+                "en"
+            ],
+            "features": {},
+            "path": "mangadotnet-0.0.1.cbe"
+        }
+    ]
 }
