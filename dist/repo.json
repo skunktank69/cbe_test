@@ -1,12 +1,12 @@
 {
   "name": "string",
-  "author": "string", 
-  "created": 123456, 
+  "author": "string",
+  "created": 123456,
   "updated": 123456,
   "version": 1.0,
   "extensions": [
     {
-      "id": "string", 
+      "id": "string",
       "name": "string",
       "logo": "string",
       "path": "string",
@@ -18,9 +18,9 @@
           "lang": "string",
           "id": 123456,
           "baseUrl": "string",
-          "version": 1.0,
-        },
-      ],
-    },
-  ],
+          "version": 1.0
+        }
+      ]
+    }
+  ]
 }
