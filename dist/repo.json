@@ -1,23 +1,26 @@
 {
-    "repo": {
-        "name": ".",
-        "author": "skunktank69",
-        "version": "0.0.1"
-    },
-    "extensions": [
+  "name": "string",
+  "author": "string", 
+  "created": 123456, 
+  "updated": 123456,
+  "version": 1.0,
+  "extensions": [
+    {
+      "id": "string", 
+      "name": "string",
+      "logo": "string",
+      "path": "string",
+      "nsfw": false,
+      "version": 1.0,
+      "sources": [
         {
-            "id": "mangadotnet",
-            "name": "MangaDotNet",
-            "version": "0.0.1",
-            "type": "manga",
-            "author": "Skunktank69",
-            "entry": "main.js",
-            "sourceLogo": "logo.png",
-            "lang": [
-                "en"
-            ],
-            "features": {},
-            "path": "mangadotnet-0.0.1.cbe"
-        }
-    ]
+          "name": "string",
+          "lang": "string",
+          "id": 123456,
+          "baseUrl": "string",
+          "version": 1.0,
+        },
+      ],
+    },
+  ],
 }
