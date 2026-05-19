@@ -1,5 +1,22 @@
 {
+  "name": "cbe_extensions",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "ext:build": "rimraf dist;bun build --bundle src/* --outdir dist ; cp repo.json dist",
+    "copy": "cpx \"repo.json\"  dist"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
   "dependencies": {
-    "cinderbyte-ext-sdk": "^2.0.0"
+    "@types/cheerio": "^1.0.0",
+    "axios": "^1.16.1",
+    "cheerio": "^1.2.0",
+    "rimraf": "^6.1.3"
   }
 }
