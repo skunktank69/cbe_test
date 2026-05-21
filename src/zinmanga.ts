@@ -32,3 +32,31 @@ export async function search(query: string, page: number = 1) {
   console.log(results);
   return results;
 }
+
+export async function getInfo(id: string) {
+  const data = await axios.get(`${baseUrl}/manga/${id}`);
+
+  const $ = cheerio.load(data.data);
+  const title = $(".post-title > h1").text().trim();
+  const image = $(".summary_image > a > img").attr("src") || "";
+  const chapters = $(".wp-manga-chapter").text().trim();
+  // .each((_,el) => {
+  //    return {
+  //     title: $(el).find("span > a").text().trim(),
+  //     chapterNumber:$(el).find("span > a").attr("data-id"),
+  //    }
+  // }).get()
+
+  return {
+    title,
+    image,
+    chapters,
+  };
+}
+
+(globalThis as any).Extension = {
+  search,
+  getInfo,
+};
+
+// getManga("one-piece-official").then(console.log);

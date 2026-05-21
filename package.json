@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "ext:build": "rimraf dist;bun build --bundle src/* --outdir dist ; cp repo.json dist",
+    "ext:build": "rimraf dist;bun build ./src/*     --bundle       --outdir ./dist     --format iife  ; cp repo.json dist",
     "copy": "cpx \"repo.json\"  dist"
   },
   "devDependencies": {
