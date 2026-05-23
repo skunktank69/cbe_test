@@ -16379,112 +16379,151 @@
   // node_modules/cheerio/dist/browser/load-parse.js
   var parse5 = getParse((content, options, isDocument2, context) => options._useHtmlParser2 ? parseDocument(content, options) : parseWithParse5(content, options, isDocument2, context));
   var load = getLoad(parse5, (dom, options) => options._useHtmlParser2 ? esm_default(dom, options) : renderWithParse5(dom));
-  // src/zinmanga.ts
-  var BASE_URL = "https://www.mangakakalot.gg";
-  var headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-    Referer: "https://www.mangakakalot.gg/",
-    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.5"
-  };
-  async function fetchHtml(url) {
-    const { data: data2 } = await axios_default.get(url, {
-      headers
-    });
-    return load(data2);
-  }
-  function parseId(url = "") {
-    return url.split("/manga/")[1] || url.split("/").pop() || "";
-  }
-  function parseMangaList($2) {
-    const mangas = [];
-    $2(".list-truyen-item-wrap").each((_, el) => {
-      const titleEl = $2(el).find("h3 a");
-      mangas.push({
-        id: parseId(titleEl.attr("href")),
-        title: titleEl.text().trim(),
-        image: $2(el).find("img").attr("src"),
-        latestChapter: $2(el).find(".list-story-item-wrap-chapter").text().trim(),
-        views: parseInt($2(el).find("span.aye_icon").text().replace(/,/g, "")) || 0
-      });
-    });
-    return mangas;
-  }
-  async function search(query, page = 1) {
-    const url = `${BASE_URL}/search/story/${encodeURIComponent(query)}${page > 1 ? `?page=${page}` : ""}`;
-    const $2 = await fetchHtml(url);
-    const mangas = [];
-    $2(".panel_story_list .story_item").each((_, el) => {
-      const link = $2(el).find(".story_name a");
-      mangas.push({
-        id: parseId(link.attr("href")),
-        title: link.text().trim(),
-        image: $2(el).find("img").attr("src")
-      });
-    });
-    return mangas;
-  }
-  async function getInfo(id) {
-    const $2 = await fetchHtml(`${BASE_URL}/manga/${id}`);
-    const genres = [];
-    $2(".manga-info-text li.genres a").each((_, el) => {
-      genres.push($2(el).text().trim());
-    });
-    return {
-      id,
-      title: $2(".manga-info-text h1").text().trim(),
-      altTitles: $2(".story-alternative").text().replace("Alternative :", "").trim(),
-      image: $2(".manga-info-pic img").attr("src"),
-      author: $2(".manga-info-text li:contains('Author')").text().replace("Author(s) :", "").trim(),
-      status: $2(".manga-info-text li:contains('Status')").text().replace("Status :", "").trim(),
-      genres,
-      description: $2("#contentBox").text().trim()
-    };
-  }
-  async function getLatest(page = 1) {
-    const $2 = await fetchHtml(`${BASE_URL}/manga-list/latest-manga${page > 1 ? `?page=${page}` : ""}`);
-    return parseMangaList($2);
-  }
-  async function getPopular(page = 1) {
-    const $2 = await fetchHtml(`${BASE_URL}/manga-list/hot-manga${page > 1 ? `?page=${page}` : ""}`);
-    return parseMangaList($2);
-  }
-  async function getChapterList(id) {
-    const $2 = await fetchHtml(`${BASE_URL}/manga/${id}`);
-    const chapters = [];
-    $2(".chapter-list .row").each((_, el) => {
-      const link = $2(el).find("span:first-child a");
-      chapters.push({
-        id: parseId(link.attr("href")),
-        title: link.text().trim(),
-        views: parseInt($2(el).find("span:nth-child(2)").text().replace(/,/g, "")) || 0,
-        date: $2(el).find("span:last-child").text().trim()
-      });
-    });
-    return chapters;
-  }
-  async function getPages(mangaId, chapterId) {
-    const $2 = await fetchHtml(`${BASE_URL}/manga/${mangaId}/${chapterId}`);
-    const pages = [];
-    $2(".container-chapter-reader img").each((_, el) => {
-      const src = $2(el).attr("src");
-      if (src) {
-        pages.push(src);
+  // src/mangapill.ts
+  axios_default.defaults.withCredentials = true;
+  var BASE_URL = "https://mangapill.com";
+  async function search({
+    query,
+    page = 1
+  }) {
+    const { data: data2 } = await axios_default.get(`${BASE_URL}/search?q=${query}&status=&type=&page=${page}`, {
+      headers: {
+        Host: "mangapill.com",
+        Referer: "https://mangapill.com/search?q=one+piece&status=&type=&page=1",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0"
       }
     });
+    const $2 = load(data2);
+    let results = [];
+    $2(".my-3.grid.justify-end.gap-3 > div ").each((_, el) => {
+      results.push({
+        image: $2(el).find("img").attr("data-src"),
+        id: $2(el).find("a.relative.block").attr("href")?.replace("/", ""),
+        title: $2(el).find("div > a > div.font-black").text().trim(),
+        link: $2(el).find("a.relative.block").attr("href")?.replace("/", "")
+      });
+    });
+    const hasNext = $2("div.justify-center > a.btn.btn-sm").text().split(" ").indexOf("Next") >= 0 ? true : false;
     return {
-      id: chapterId,
-      title: $2(".info-top-chapter h2").text().trim(),
-      pages
+      results,
+      meta: {
+        total: NaN,
+        perPage: 50,
+        hasNext,
+        lastPage: NaN
+      }
     };
+  }
+  async function getInfo({ id }) {
+    const { data: data2 } = await axios_default.get(`${BASE_URL}/manga/${id}`, {
+      headers: {
+        Host: "mangapill.com",
+        Referer: `https://mangapill.com/manga/${id}`,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0"
+      }
+    });
+    const $2 = load(data2);
+    function ee(i) {
+      var k;
+      ((k2) => {
+        k2["ongoing"] = "ongoing";
+        k2["finished"] = "finished";
+        k2["on_hiatus"] = "on_hiatus";
+        k2["discontinued"] = "discontinued";
+        k2["upcoming"] = "upcoming";
+      })(k ||= {});
+      if (i === "publishing") {
+        return "ongoing" /* ongoing */;
+      }
+      return k[i];
+    }
+    const chapters = [];
+    $2("#chapters > .my-3 > .border-border").each((_, el) => {
+      chapters.push({
+        title: String($2(el).attr("title")),
+        number: Number($2(el).attr("href")?.split("/")[3]?.split("-chapter-")[1]),
+        id: String($2(el).attr("href")?.split("/chapters/").join("")),
+        link: String($2(el).attr("href"))
+      });
+    });
+    const genre = [];
+    $2("a.text-sm.mr-1.text-brand").each((_, el) => {
+      genre.push($2(el).text().trim());
+    });
+    const result = {
+      title: $2("div > div > h1.font-bold").text().trim(),
+      image: String($2(".flex-shrink-0 > img").attr("data-src")),
+      status: ee($2(".grid-cols-1 > div:nth-of-type(2) > div").text().trim()),
+      year: Number($2(".grid-cols-1 > div:nth-of-type(3) > div").text().trim()),
+      synopsis: String($2(".mb-3 > .text-sm.text--secondary").text().trim()),
+      chapters,
+      genre
+    };
+    console.log(result);
+    return result;
+  }
+  async function getLatest(...args) {
+    const { data: data2 } = await axios_default.get(`${BASE_URL}/mangas/new`, {
+      headers: {
+        Host: "mangapill.com",
+        Referer: `https://mangapill.com/mangas/new`,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0"
+      }
+    });
+    const $2 = load(data2);
+    const card = $2(".grid.justify-end.gap-3.grid-cols-2 > div");
+    const latest = [];
+    card.each((_, el) => {
+      latest.push({
+        id: $2(el).find("a.relative.block").attr("href")?.replace("/manga/", ""),
+        title: $2(el).find("div > a > div.font-black").text().trim(),
+        image: $2(el).find("img").attr("data-src"),
+        link: $2(el).find("a.relative.block").attr("href")?.replace("/", "")
+      });
+    });
+    return latest;
+  }
+  async function getPopular(...args) {
+    const data2 = await axios_default.get(`${BASE_URL}`, {
+      headers: {
+        Host: "mangapill.com",
+        Referer: `https://mangapill.com/`,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0"
+      }
+    });
+    const $2 = load(data2.data);
+    const card = $2(".my-3.grid.justify-end.gap-3.grid-cols-2  > div");
+    const items = [];
+    card.each((_, el) => {
+      items.push({
+        id: $2(el).find("a.relative.block").attr("href")?.replace("/manga/", ""),
+        title: $2(el).find("div > a > div.font-black").text().trim(),
+        image: $2(el).find("img").attr("data-src"),
+        link: $2(el).find("a.relative.block").attr("href")?.replace("/", "")
+      });
+    });
+    return items;
+  }
+  async function getPages({ chapter }) {
+    const { data: data2 } = await axios_default.get(`${BASE_URL}/chapters/${chapter}`, {
+      headers: {
+        Host: "mangapill.com",
+        Referer: `https://mangapill.com/chapters/${chapter}`,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0"
+      }
+    });
+    const $2 = load(data2);
+    const pages = [];
+    $2(".relative.bg-card.flex.justify-center.items-center > picture > img").each((_, el) => {
+      pages.push($2(el).attr("data-src"));
+    });
+    return pages;
   }
   globalThis.Extension = {
     search,
     getInfo,
     getLatest,
     getPopular,
-    getPages,
-    getChapterList
+    getPages
   };
-  search("one piece");
 })();

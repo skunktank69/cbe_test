@@ -6,7 +6,7 @@
   "version": "0.0.1",
   "extensions": [
     {
-      "id": "zinmanga",
+      "id": "zinmanga-cb",
       "name": "zinmanga",
       "logo": "https://zinmanga.net/image/icon/cropped-IMG_20200222_225535-192x192.jpg",
       "path": "zinmanga.js",
@@ -16,8 +16,25 @@
         {
           "name": "zinmanga",
           "lang": "en",
-          "id": "zinmanga-en",
+          "id": "zinmanga-cb",
           "baseUrl": "https://zinmanga.net",
+          "version": "0.0.1"
+        }
+      ]
+    },
+    {
+      "id": "mangapill-cb",
+      "name": "mangapill",
+      "logo": "https://mangapill.com/static/favicon/apple-touch-icon.png",
+      "path": "mangapill.js",
+      "nsfw": true,
+      "version": "0.0.1",
+      "sources": [
+        {
+          "name": "mangapill",
+          "lang": "en",
+          "id": "magnapill-cb",
+          "baseUrl": "https://mangapill.com",
           "version": "0.0.1"
         }
       ]
