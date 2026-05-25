@@ -308,19 +308,18 @@ async function getPages({ chapter }: { chapter: string }) {
   return pages;
 }
 
-async function getImage(image: string): Promise<string> {
+async function getImage(image: string): Promise<Buffer<any>> {
   const im = await axios.get(image, {
+    responseType: "arraybuffer",
     headers: {
-      Accept:
-        "image/avif,image/jxl,image/webp,image/png,image/svg+xml,image/*;q=0.8,*/*;q=0.5",
-      Referer: "https://mangapill.com",
+      Referer: "https://mangapill.com/",
       Origin: "https://mangapill.com",
       "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
     },
   });
 
-  return im.data;
+  return Buffer.from(im.data);
 }
 
 (globalThis as any).Extension = {

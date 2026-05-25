@@ -3,7 +3,6 @@
   var __getProtoOf = Object.getPrototypeOf;
   var __defProp = Object.defineProperty;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   function __accessProp(key) {
     return this[key];
@@ -30,23 +29,6 @@
       cache.set(mod, to);
     return to;
   };
-  var __toCommonJS = (from) => {
-    var entry = (__moduleCache ??= new WeakMap).get(from), desc;
-    if (entry)
-      return entry;
-    entry = __defProp({}, "__esModule", { value: true });
-    if (from && typeof from === "object" || typeof from === "function") {
-      for (var key of __getOwnPropNames(from))
-        if (!__hasOwnProp.call(entry, key))
-          __defProp(entry, key, {
-            get: __accessProp.bind(from, key),
-            enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
-          });
-    }
-    __moduleCache.set(from, entry);
-    return entry;
-  };
-  var __moduleCache;
   var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
   var __returnValue = (v) => v;
   function __exportSetter(name, newValue) {
@@ -79,12 +61,6 @@
         return false;
       }
     };
-  });
-
-  // src/mangapill.ts
-  var exports_mangapill = {};
-  __export(exports_mangapill, {
-    BASE_URL: () => BASE_URL
   });
 
   // node_modules/axios/lib/helpers/bind.js
@@ -16545,17 +16521,16 @@
   }
   async function getImage(image) {
     const im = await axios_default.get(image, {
+      responseType: "arraybuffer",
       headers: {
-        Accept: "image/avif,image/jxl,image/webp,image/png,image/svg+xml,image/*;q=0.8,*/*;q=0.5",
-        Referer: "https://mangapill.com",
+        Referer: "https://mangapill.com/",
         Origin: "https://mangapill.com",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36"
       }
     });
-    return im.data;
+    return Buffer.from(im.data);
   }
   globalThis.Extension = {
-    BASE_URL,
     search,
     getInfo,
     getLatest,
