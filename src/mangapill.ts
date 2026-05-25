@@ -10,8 +10,10 @@ import { type infoParams, type mangaItem } from "../types/getInfo";
 
 axios.defaults.withCredentials = true;
 
-const BASE_URL = "https://mangapill.com";
-
+const BASE_URL = () => {
+  return "https://mangapill.com";
+};
+console.log(BASE_URL());
 /*
 search - o
 getInfo - o
@@ -19,6 +21,7 @@ getLatest - o
 getPopular - o
 getPages - o
 getChapterList - x
+getImage -
  */
 
 /**
@@ -77,7 +80,7 @@ async function search({
   page = 1,
 }: searchParams): Promise<searchResult<searchResultItems>> {
   const { data } = await axios.get(
-    `${BASE_URL}/search?q=${query}&status=&type=&page=${page}`,
+    `${BASE_URL()}/search?q=${query}&status=&type=&page=${page}`,
     {
       headers: {
         Host: "mangapill.com",
@@ -96,7 +99,10 @@ async function search({
   $(".my-3.grid.justify-end.gap-3 > div ").each((_, el) => {
     results.push({
       image: $(el).find("img").attr("data-src") as string,
-      id: $(el).find("a.relative.block").attr("href")?.replace("/", "") as string,
+      id: $(el)
+        .find("a.relative.block")
+        .attr("href")
+        ?.replace("/", "") as string,
       title: $(el).find("div > a > div.font-black").text().trim(),
       link: $(el)
         .find("a.relative.block")
@@ -122,7 +128,7 @@ async function search({
 }
 
 async function getInfo({ id }: infoParams): Promise<mangaItem> {
-  const { data } = await axios.get(`${BASE_URL}/manga/${id}`, {
+  const { data } = await axios.get(`${BASE_URL()}/manga/${id}`, {
     // /id/slug
     headers: {
       Host: "mangapill.com",
@@ -155,7 +161,7 @@ async function getInfo({ id }: infoParams): Promise<mangaItem> {
       number: Number(
         $(el).attr("href")?.split("/")[3]?.split("-chapter-")[1] as undefined,
       ),
-      id: String($(el).attr("href")?.split("/chapters/").join('')),
+      id: String($(el).attr("href")?.split("/chapters/").join("")),
       link: String($(el).attr("href")),
     });
   });
@@ -174,7 +180,6 @@ async function getInfo({ id }: infoParams): Promise<mangaItem> {
     genre,
   };
 
-  console.log(result);
   return result;
 }
 
@@ -194,10 +199,11 @@ async function getInfo({ id }: infoParams): Promise<mangaItem> {
  * await getLatest();
  */
 
-async function getLatest(...args: any[]) { // param for compatibility with other sources, not used in mangapill 
+async function getLatest(...args: any[]) {
+  // param for compatibility with other sources, not used in mangapill
   // just so linter does not give unused warning
   args;
-  const {data} = await axios.get(`${BASE_URL}/mangas/new`, {
+  const { data } = await axios.get(`${BASE_URL}/mangas/new`, {
     headers: {
       Host: "mangapill.com",
       Referer: `https://mangapill.com/mangas/new`,
@@ -205,21 +211,30 @@ async function getLatest(...args: any[]) { // param for compatibility with other
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0",
     },
   });
-    const $ = load(data);
-    const card = $(".grid.justify-end.gap-3.grid-cols-2 > div");
-    const latest: Array<{id: string, title: string, image: string, link: string}> = [];
-    card.each((_, el) => {
-      latest.push({
-        id: $(el).find("a.relative.block").attr("href")?.replace("/manga/", "") as string,
-        title: $(el).find("div > a > div.font-black").text().trim(),
-        image: $(el).find("img").attr("data-src") as string,
-        link: $(el).find("a.relative.block").attr("href")?.replace("/", "") as string,
-
-      });
+  const $ = load(data);
+  const card = $(".grid.justify-end.gap-3.grid-cols-2 > div");
+  const latest: Array<{
+    id: string;
+    title: string;
+    image: string;
+    link: string;
+  }> = [];
+  card.each((_, el) => {
+    latest.push({
+      id: $(el)
+        .find("a.relative.block")
+        .attr("href")
+        ?.replace("/manga/", "") as string,
+      title: $(el).find("div > a > div.font-black").text().trim(),
+      image: $(el).find("img").attr("data-src") as string,
+      link: $(el)
+        .find("a.relative.block")
+        .attr("href")
+        ?.replace("/", "") as string,
     });
-    return latest;
+  });
+  return latest;
 }
-
 
 /**
  * Fetches popular manga entries from MangaPill homepage.
@@ -241,7 +256,7 @@ async function getLatest(...args: any[]) { // param for compatibility with other
  * const popular = await getPopular();
  * console.log(popular);
  */
-async function getPopular(...args: any[])  {
+async function getPopular(...args: any[]) {
   const data = await axios.get(`${BASE_URL}`, {
     headers: {
       Host: "mangapill.com",
@@ -252,22 +267,31 @@ async function getPopular(...args: any[])  {
   });
   const $ = load(data.data);
   const card = $(".my-3.grid.justify-end.gap-3.grid-cols-2  > div");
-  const items: Array<{id: string, title: string, image: string, link: string}> = [];
-  card.each((_, el) => {  
-      items.push({
-      id: $(el).find("a.relative.block").attr("href")?.replace("/manga/", "") as string,
+  const items: Array<{
+    id: string;
+    title: string;
+    image: string;
+    link: string;
+  }> = [];
+  card.each((_, el) => {
+    items.push({
+      id: $(el)
+        .find("a.relative.block")
+        .attr("href")
+        ?.replace("/manga/", "") as string,
       title: $(el).find("div > a > div.font-black").text().trim(),
       image: $(el).find("img").attr("data-src") as string,
-      link: $(el).find("a.relative.block").attr("href")?.replace("/", "") as string,
+      link: $(el)
+        .find("a.relative.block")
+        .attr("href")
+        ?.replace("/", "") as string,
     });
-
   });
   return items;
-
 }
 
-async function getPages({chapter}: {chapter: string}) {
-  const  {data} = await axios.get(`${BASE_URL}/chapters/${chapter}`, {
+async function getPages({ chapter }: { chapter: string }) {
+  const { data } = await axios.get(`${BASE_URL}/chapters/${chapter}`, {
     headers: {
       Host: "mangapill.com",
       Referer: `https://mangapill.com/chapters/${chapter}`,
@@ -277,12 +301,25 @@ async function getPages({chapter}: {chapter: string}) {
   });
   const $ = load(data);
   const pages: string[] = [];
-  $(".relative.bg-card.flex.justify-center.items-center > picture > img").each((_, el) => {
-    pages.push($(el).attr("data-src") as string);
-  });
+  $(".relative.bg-card.flex.justify-center.items-center > picture > img").each(
+    (_, el) => {
+      pages.push($(el).attr("data-src") as string);
+    },
+  );
   return pages;
 }
 
+async function getImage(image: string): Promise<string> {
+  const im = await axios.get(image, {
+    headers: {
+      Referer: "https://mangapill.com",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0",
+    },
+  });
+
+  return im.data;
+}
 
 (globalThis as any).Extension = {
   search,
@@ -291,7 +328,3 @@ async function getPages({chapter}: {chapter: string}) {
   getPopular,
   getPages,
 };
-
-
-
-

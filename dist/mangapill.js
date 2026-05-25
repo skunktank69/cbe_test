@@ -16381,12 +16381,15 @@
   var load = getLoad(parse5, (dom, options) => options._useHtmlParser2 ? esm_default(dom, options) : renderWithParse5(dom));
   // src/mangapill.ts
   axios_default.defaults.withCredentials = true;
-  var BASE_URL = "https://mangapill.com";
+  var BASE_URL = () => {
+    return "https://mangapill.com";
+  };
+  console.log(BASE_URL());
   async function search({
     query,
     page = 1
   }) {
-    const { data: data2 } = await axios_default.get(`${BASE_URL}/search?q=${query}&status=&type=&page=${page}`, {
+    const { data: data2 } = await axios_default.get(`${BASE_URL()}/search?q=${query}&status=&type=&page=${page}`, {
       headers: {
         Host: "mangapill.com",
         Referer: "https://mangapill.com/search?q=one+piece&status=&type=&page=1",
@@ -16415,7 +16418,7 @@
     };
   }
   async function getInfo({ id }) {
-    const { data: data2 } = await axios_default.get(`${BASE_URL}/manga/${id}`, {
+    const { data: data2 } = await axios_default.get(`${BASE_URL()}/manga/${id}`, {
       headers: {
         Host: "mangapill.com",
         Referer: `https://mangapill.com/manga/${id}`,
@@ -16459,7 +16462,6 @@
       chapters,
       genre
     };
-    console.log(result);
     return result;
   }
   async function getLatest(...args) {
