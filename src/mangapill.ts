@@ -311,7 +311,10 @@ async function getPages({ chapter }: { chapter: string }) {
 async function getImage(image: string): Promise<string> {
   const im = await axios.get(image, {
     headers: {
+      Accept:
+        "image/avif,image/jxl,image/webp,image/png,image/svg+xml,image/*;q=0.8,*/*;q=0.5",
       Referer: "https://mangapill.com",
+      Origin: "https://mangapill.com",
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0",
     },
