@@ -328,5 +328,3 @@ async function getImage(image: string): Promise<string> {
   getPages,
   getImage,
 };
-
-getInfo({ id: "2/one-piece" }).then(console.log);

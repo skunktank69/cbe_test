@@ -16536,5 +16536,4 @@
     getPages,
     getImage
   };
-  getInfo({ id: "2/one-piece" }).then(console.log);
 })();
