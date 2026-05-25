@@ -10,10 +10,9 @@ import { type infoParams, type mangaItem } from "../types/getInfo";
 
 axios.defaults.withCredentials = true;
 
-const BASE_URL = () => {
-  return "https://mangapill.com";
-};
-console.log(BASE_URL());
+const BASE_URL = "https://mangapill.com";
+
+console.log(BASE_URL);
 /*
 search - o
 getInfo - o
@@ -80,7 +79,7 @@ async function search({
   page = 1,
 }: searchParams): Promise<searchResult<searchResultItems>> {
   const { data } = await axios.get(
-    `${BASE_URL()}/search?q=${query}&status=&type=&page=${page}`,
+    `${BASE_URL}/search?q=${query}&status=&type=&page=${page}`,
     {
       headers: {
         Host: "mangapill.com",
@@ -128,7 +127,7 @@ async function search({
 }
 
 async function getInfo({ id }: infoParams): Promise<mangaItem> {
-  const { data } = await axios.get(`${BASE_URL()}/manga/${id}`, {
+  const { data } = await axios.get(`${BASE_URL}/manga/${id}`, {
     // /id/slug
     headers: {
       Host: "mangapill.com",
@@ -329,3 +328,5 @@ async function getImage(image: string): Promise<string> {
   getPages,
   getImage,
 };
+
+getInfo({ id: "2/one-piece" }).then(console.log);

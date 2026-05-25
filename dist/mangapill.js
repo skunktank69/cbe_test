@@ -16381,15 +16381,13 @@
   var load = getLoad(parse5, (dom, options) => options._useHtmlParser2 ? esm_default(dom, options) : renderWithParse5(dom));
   // src/mangapill.ts
   axios_default.defaults.withCredentials = true;
-  var BASE_URL = () => {
-    return "https://mangapill.com";
-  };
-  console.log(BASE_URL());
+  var BASE_URL = "https://mangapill.com";
+  console.log(BASE_URL);
   async function search({
     query,
     page = 1
   }) {
-    const { data: data2 } = await axios_default.get(`${BASE_URL()}/search?q=${query}&status=&type=&page=${page}`, {
+    const { data: data2 } = await axios_default.get(`${BASE_URL}/search?q=${query}&status=&type=&page=${page}`, {
       headers: {
         Host: "mangapill.com",
         Referer: "https://mangapill.com/search?q=one+piece&status=&type=&page=1",
@@ -16418,7 +16416,7 @@
     };
   }
   async function getInfo({ id }) {
-    const { data: data2 } = await axios_default.get(`${BASE_URL()}/manga/${id}`, {
+    const { data: data2 } = await axios_default.get(`${BASE_URL}/manga/${id}`, {
       headers: {
         Host: "mangapill.com",
         Referer: `https://mangapill.com/manga/${id}`,
@@ -16521,11 +16519,22 @@
     });
     return pages;
   }
+  async function getImage(image) {
+    const im = await axios_default.get(image, {
+      headers: {
+        Referer: "https://mangapill.com",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:150.0) Gecko/20100101 Firefox/150.0"
+      }
+    });
+    return im.data;
+  }
   globalThis.Extension = {
     search,
     getInfo,
     getLatest,
     getPopular,
-    getPages
+    getPages,
+    getImage
   };
+  getInfo({ id: "2/one-piece" }).then(console.log);
 })();
