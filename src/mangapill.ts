@@ -10,7 +10,7 @@ import { type infoParams, type mangaItem } from "../types/getInfo";
 
 axios.defaults.withCredentials = true;
 
-export const BASE_URL = "https://mangapill.com";
+const BASE_URL = "https://mangapill.com";
 
 console.log(BASE_URL);
 /*
@@ -324,7 +324,6 @@ async function getImage(image: string): Promise<string> {
 }
 
 (globalThis as any).Extension = {
-  BASE_URL,
   search,
   getInfo,
   getLatest,
