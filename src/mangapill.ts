@@ -327,4 +327,5 @@ async function getImage(image: string): Promise<string> {
   getLatest,
   getPopular,
   getPages,
+  getImage,
 };
